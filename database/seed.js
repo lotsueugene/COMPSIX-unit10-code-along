@@ -8,31 +8,29 @@ async function initializeDatabase() {
         await db.authenticate();
         console.log('Database connection established successfully.');
         
-        await db.sync({ force: false });
+        await db.sync({ force: true });
         console.log('Database synchronized successfully.');
         
         // Create sample users for testing
-        const existingUsers = await User.findAll();
-        if (existingUsers.length === 0) {
-            const bcrypt = require('bcryptjs');
-            const hashedPassword = await bcrypt.hash('password123', 10);
-            
-            const users = await User.bulkCreate([
-                {
-                    username: 'reader',
-                    email: 'reader@example.com',
-                    password: hashedPassword
+        const users = await User.bulkCreate([
+            {
+            username: 'reader',
+            email: 'reader@example.com',
+            password: hashedPassword,
+            role: 'reader'
                 },
-                {
-                    username: 'author',
-                    email: 'author@example.com',
-                    password: hashedPassword
+            {
+            username: 'author',
+            email: 'author@example.com',
+            password: hashedPassword,
+            role: 'author'
                 },
-                {
-                    username: 'editor',
-                    email: 'editor@example.com',
-                    password: hashedPassword
-                }
+            {
+            username: 'editor',
+            email: 'editor@example.com',
+            password: hashedPassword,
+            role: 'editor'
+            }
             ]);
             
             // Create sample posts
@@ -75,7 +73,7 @@ async function initializeDatabase() {
             console.log('- editor@example.com / password123');
             console.log('Sample posts created with various authors and publish states.');
         }
-    } catch (error) {
+     catch (error) {
         console.error('Unable to connect to database:', error);
     }
 }
